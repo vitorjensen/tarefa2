@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author vitorjensen
@@ -22,6 +23,8 @@ Statement statement;
     public CadastroProdutos() {
         initComponents();
         abrirConexao();
+        atualizarTabela();
+        jTextField2.requestFocus();
     }
 /* Método para abrir a conexão com o banco de dados */
     
@@ -29,7 +32,7 @@ Statement statement;
     {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection("jdbc:mysql://192.168.15.162:3306/curso", "root" , "root");
+            connection = DriverManager.getConnection("jdbc:mysql://192.168.0.166:3306/curso", "root" , "senha123");
             statement = connection.createStatement();
             
         }catch(Exception e)
@@ -50,7 +53,23 @@ Statement statement;
     
     private void atualizarTabela()
     {
-        /* Parei aqui!!!! */
+        ((DefaultTableModel) jTable1.getModel()).setRowCount(0);
+        try{
+        ResultSet result = statement.executeQuery("SELECT * FROM produto");
+        while(result.next())
+        {
+            String linha[] = { 
+                String.valueOf(result.getInt(1)),
+                result.getString(2),
+                  result.getString(3),
+            };
+           ((DefaultTableModel) jTable1.getModel()).addRow(linha);
+        }
+        
+        }catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
