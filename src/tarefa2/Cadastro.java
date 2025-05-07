@@ -32,7 +32,7 @@ Statement statement;
     {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection("jdbc:mysql://192.168.15.162:3306/tarefa2", "aluno" , "segredo");
+            connection = DriverManager.getConnection("jdbc:mysql://192.168.0.107:3306/tarefa2", "aluno" , "segredo");
             statement = connection.createStatement();
             
         }catch(Exception e)
@@ -141,6 +141,11 @@ Statement statement;
 
         jButton4.setText("Alterar");
         jButton4.setEnabled(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Remover");
         jButton5.setEnabled(false);
@@ -172,6 +177,11 @@ Statement statement;
             }
         });
         jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
@@ -275,6 +285,11 @@ Statement statement;
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+       limpar();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void limpar()
+    {
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
@@ -285,8 +300,8 @@ Statement statement;
         jButton3.setEnabled(true);
         jButton4.setEnabled(false);
         jButton5.setEnabled(false);
-    }//GEN-LAST:event_jButton3ActionPerformed
-
+    }
+    /* Função para o botão de Inserir do cadastro */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
        String ano = jTextField2.getText();
        String mes = jTextField3.getText();
@@ -297,13 +312,52 @@ Statement statement;
            {
                throw new Exception("Preeencha todos os campos!");
            }
-           statement.executeUpdate("INSERT INTO evento VALUES(null, '" + ano + "','" + mes + "', '"+ dia + '", "+ nome + ")");
-           /* PAREI AQUI!!! */
-       }catch (Exception e)
+           statement.executeUpdate("INSERT INTO evento VALUES(null, '"
+                   + ano + "', '"+ mes +"', '"+ dia +"', '"+ nome +"')");
+           limpar();
+           
+      }catch (Exception e)
                {
                    JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
-               }
+               } 
     }//GEN-LAST:event_jButton2ActionPerformed
+    /* Configurando o evento para o Duplo Clique */
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        if(evt.getClickCount() == 2)
+        {
+            int i = jTable1.getSelectedRow();
+            jTextField1.setText(((DefaultTableModel) jTable1.getModel()) .getValueAt(i, 0) .toString());
+            jTextField2.setText(((DefaultTableModel) jTable1.getModel()) .getValueAt(i, 1) .toString());
+            jTextField3.setText(((DefaultTableModel) jTable1.getModel()) .getValueAt(i, 2) .toString());
+            jTextField4.setText(((DefaultTableModel) jTable1.getModel()) .getValueAt(i, 3) .toString());
+            jTextField5.setText(((DefaultTableModel) jTable1.getModel()) .getValueAt(i, 4) .toString());
+            jButton2.setEnabled(false);
+            jButton3.setEnabled(true);
+            jButton4.setEnabled(true);
+            jButton5.setEnabled(true);
+            }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+       String id = jTextField1.getText();
+       String ano = jTextField2.getText();
+       String mes = jTextField3.getText();
+       String dia = jTextField4.getText();
+       String nome = jTextField5.getText();
+       try{
+           if(ano.equals("") || mes.equals("") || dia.equals("") || nome.equals(""))
+           {
+               throw new Exception("Preeencha todos os campos!");
+           }
+           statement.executeUpdate("UPDATE evento SET ano= '"+ ano +"',mes= '"+ mes +"',dia= '"+ dia +"',nome='"+ nome +"' WHERE id= '"+ id + "' ");
+           limpar();
+            JOptionPane.showMessageDialog(this, "Item "+ id+" editado com sucesso", "SUCESSO", JOptionPane.INFORMATION_MESSAGE);
+           
+      }catch (Exception e)
+               {
+                   JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
+               } 
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
