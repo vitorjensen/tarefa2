@@ -32,7 +32,7 @@ Statement statement;
     {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection("jdbc:mysql://192.168.0.107:3306/tarefa2", "aluno" , "segredo");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tarefa2", "aluno" , "segredo");
             statement = connection.createStatement();
             
         }catch(Exception e)
@@ -106,6 +106,7 @@ Statement statement;
         jLabel1.setText("ID:");
 
         jTextField1.setEditable(false);
+        jTextField1.setEnabled(false);
         jTextField1.setName(""); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -149,6 +150,11 @@ Statement statement;
 
         jButton5.setText("Remover");
         jButton5.setEnabled(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -358,6 +364,25 @@ Statement statement;
                    JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
                } 
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+       String id = jTextField1.getText();
+        try {
+            if (JOptionPane.showConfirmDialog(this, "Remover o evento " + id + "?") == JOptionPane.OK_OPTION) {
+                statement.executeUpdate("DELETE FROM evento WHERE id=" + id);
+                JOptionPane.showMessageDialog(this,
+                        "Evento " + id + " removido com sucesso",
+                        "SUCESSO",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+            limpar();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    e.getMessage(),
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
